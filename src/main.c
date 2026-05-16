@@ -1,6 +1,8 @@
+#include <stdbool.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 int main(void) {
-    printf("Hello, from my_project");
-    return 0;
+    puts("Hello, from my_project");
+    return EXIT_SUCCESS;
 }
