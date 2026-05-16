@@ -1,6 +1,9 @@
 #ifndef MAPA_H
 #define MAPA_H
 
+#define AUTO_H_INCLUDED
+#define AUTO_H_INCLUDED
+
 #define FILAS 12
 #define COLUMNAS 12
 
@@ -65,25 +68,6 @@ typedef struct {
 
 } Interseccion;
 
-typedef struct {
-
-    int id;
-
-    Coord origen;
-
-    Coord destino;
-
-    Coord posicion_actual;
-
-    Coord ruta[MAX_RUTA];
-
-    int tam_ruta;
-
-    int paso_actual;
-
-    int llego;
-
-} Vehiculo;
 
 typedef struct {
 
