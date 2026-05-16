@@ -1,0 +1,7 @@
+[simulation]
+num_vehicles = 15
+
+[semaphore]
+green_duration = 5
+yellow_duration = 1
+red_duration = 4

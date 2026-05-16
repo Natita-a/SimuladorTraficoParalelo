@@ -10,6 +10,7 @@
 #define DEFAULT_YELLOW_DUR ((uint16_t)1)
 #define DEFAULT_RED_DUR ((uint16_t)4)
 #define MAX_VEHICLES ((uint8_t)200)
+#define DEFAULT_CONFIG_PATH "traffic.toml"
 
 // --- Config ------------------------------------------------------------------
 
@@ -23,6 +24,7 @@ typedef struct {
 // --- API ---------------------------------------------------------------------
 
 Config config_defaults(void);
-void config_print(const Config *cfg);
+Config config_from_file(const char *path, Config base);
+void config_print(const Config *cfg, const char *config_path);
 
 #endif /* CONFIG_H */

@@ -6,6 +6,7 @@
 
 int main(void) {
     Config cfg = config_defaults();
-    config_print(&cfg);
+    cfg = config_from_file(DEFAULT_CONFIG_PATH, cfg);
+    config_print(&cfg, DEFAULT_CONFIG_PATH);
     return EXIT_SUCCESS;
 }
