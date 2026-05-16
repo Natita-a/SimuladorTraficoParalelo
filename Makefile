@@ -34,11 +34,11 @@ RELEASE_OBJS := $(patsubst $(SRC_DIR)/%.c, $(RELEASE_OBJ_DIR)/%.o, $(SRCS))
 
 # --- Flags --------------------------------------------------------------------
 
-COMMON_FLAGS := -std=$(STD) -Wall -Wextra -Wpedantic -I$(INC_DIR)
+COMMON_FLAGS := -std=$(STD) -Wall -Wextra -Werror -Wpedantic -I$(INC_DIR) -fopenmp
 DEBUG_FLAGS  := $(COMMON_FLAGS) -g -O0 -DDEBUG -fsanitize=address,undefined
 RELEASE_FLAGS:= $(COMMON_FLAGS) -O3 -DNDEBUG -march=native
 
-LDFLAGS      :=
+LDFLAGS      := -fopenmp
 # e.g., LDFLAGS := -lm -lpthread
 
 # --- Binaries -----------------------------------------------------------------
