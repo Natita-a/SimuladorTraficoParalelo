@@ -77,6 +77,11 @@ dkms.conf
 
 # End of https://www.toptal.com/developers/gitignore/api/c
 
+#### Team IDEs and text editors ####
+
+# Created by https://www.toptal.com/developers/gitignore/api/vim,visualstudiocode
+# Edit at https://www.toptal.com/developers/gitignore?templates=vim,visualstudiocode
+
 ### Vim ###
 # Swap
 [._]*.s[a-v][a-z]
@@ -225,7 +230,7 @@ $RECYCLE.BIN/
 
 # End of https://www.toptal.com/developers/gitignore/api/windows,linux,macos
 
-#### UNWANTED BINARIES ####
+#### PERFORMANCE: To reduce unnecesary file checking (e.g,, binaries) ####
 
 ## Compiled programs ##
 **/bin/
@@ -243,16 +248,82 @@ $RECYCLE.BIN/
 *.vb
 *.wsf
 
+# Prevents massive di
+**/.yarn/releases/**
+**/.yarn/plugins/**
+
 # End of https://www.toptal.com/developers/gitignore/api/executable
 
 ### Extensionless Executables ###
-# WARNING: Ignoring extensionless files can lead to issues. Many important files
+# WARNING: Ignoring extensionless files can lead to issues—many important files
 # like Dockerfile, Makefile, README, etc., have no extension.
 # Uncomment below to ignore all extensionless files (often used for ignoring
 # binary blobs or Unix scripts)
 #*
 #!/**/
 #!*.*
+
+### Media ###
+
+# Graphics
+*.ai
+*.bmp
+*.eps
+*.gif
+*.gifv
+*.ico
+*.jng
+*.jp2
+*.jpg
+*.jpeg
+*.jpx
+*.jxr
+*.pdf
+*.png
+*.psb
+*.psd
+*.svg
+*.svgz
+*.tif
+*.tiff
+*.wbmp
+*.webp
+
+# Audio
+*.kar
+*.m4a
+*.mid
+*.midi
+*.mp3
+*.ogg
+*.ra
+
+# Video
+*.3gpp
+*.3gp
+*.as
+*.asf
+*.asx
+*.avi
+*.fla
+*.flv
+*.m4v
+*.mng
+*.mov
+*.mp4
+*.mpeg
+*.mpg
+*.ogv
+*.swc
+*.swf
+*.webm
+
+# Fonts
+*.ttf
+*.eot
+*.otf
+*.woff
+*.woff2
 
 ### Archives and Compression Files ###
 
