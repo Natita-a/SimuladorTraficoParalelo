@@ -2,7 +2,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "config.h"
+
 int main(void) {
-    puts("Hello, from my_project");
+    Config cfg = config_defaults();
+    config_print(&cfg);
     return EXIT_SUCCESS;
 }
