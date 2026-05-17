@@ -1,13 +1,13 @@
 #include <stdio.h>
 
-#include "../include/auto.h"
+#include "auto.h"
 
 #define INFINITO 99999
 
 static int calcular_ruta(Ciudad *c, Auto *a) {
     int dist[FILAS][COLUMNAS];
     int vis[FILAS][COLUMNAS];
-    Coord padre[FILAS][COLUMNAS];
+    Coordenada padre[FILAS][COLUMNAS];
 
     int dx[] = {-1, 1, 0, 0};
     int dy[] = {0, 0, -1, 1};
@@ -25,7 +25,7 @@ static int calcular_ruta(Ciudad *c, Auto *a) {
 
     for (int k = 0; k < FILAS * COLUMNAS; k++) {
 
-        Coord u = {-1, -1};
+        Coordenada u = {-1, -1};
         int menor = INFINITO;
 
         for (int i = 0; i < FILAS; i++) {
@@ -76,9 +76,9 @@ static int calcular_ruta(Ciudad *c, Auto *a) {
         return 0;
     }
 
-    Coord tmp[MAX_RUTA];
+    Coordenada tmp[MAX_RUTA];
     int n = 0;
-    Coord cur = a->destino;
+    Coordenada cur = a->destino;
 
     while (!(cur.x == a->origen.x && cur.y == a->origen.y)) {
         tmp[n++] = cur;
@@ -100,7 +100,8 @@ static int calcular_ruta(Ciudad *c, Auto *a) {
 
 // CREAR AUTO
 
-void crear_auto(Ciudad *c, Auto *a, int id, Coord origen, Coord destino) {
+void crear_auto(Ciudad *c, Auto *a, int id, Coordenada origen,
+                Coordenada destino) {
     a->id = id;
     a->origen = origen;
     a->destino = destino;
@@ -122,7 +123,7 @@ void actualizar_auto(Ciudad *c, Auto *a) {
         return;
     }
 
-    Coord sig = a->ruta[a->idx];
+    Coordenada sig = a->ruta[a->idx];
 
     printf("Auto %d AVANZA a (%d,%d)\n", a->id, sig.x, sig.y);
 

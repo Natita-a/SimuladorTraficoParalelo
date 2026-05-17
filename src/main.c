@@ -2,8 +2,8 @@
 #include <stdlib.h>
 #include <time.h>
 
-#include "../include/auto.h"
-#include "../include/mapa.h"
+#include "auto.h"
+#include "mapa.h"
 
 #define NUM_AUTOS 20
 
@@ -16,19 +16,19 @@ int main() {
     ciudad_imprimir(&ciudad);
 
     /* Puntos de entrada en los bordes del mapa */
-    Coord bordes[] = {{0, 0},  {0, 3},  {0, 6},  {0, 9},  {0, 11},
-                      {11, 0}, {11, 3}, {11, 6}, {11, 9}, {11, 11},
-                      {3, 0},  {6, 0},  {9, 0},  {3, 11}, {6, 11},
-                      {9, 11}, {0, 1},  {0, 5},  {11, 2}, {11, 7}};
+    Coordenada bordes[] = {{0, 0},  {0, 3},  {0, 6},  {0, 9},  {0, 11},
+                           {11, 0}, {11, 3}, {11, 6}, {11, 9}, {11, 11},
+                           {3, 0},  {6, 0},  {9, 0},  {3, 11}, {6, 11},
+                           {9, 11}, {0, 1},  {0, 5},  {11, 2}, {11, 7}};
     int num_bordes = 20;
 
     /* Crear 20 autos */
     Auto autos[NUM_AUTOS];
 
     for (int i = 0; i < NUM_AUTOS; i++) {
-        Coord origen = bordes[i % num_bordes];
+        Coordenada origen = bordes[i % num_bordes];
 
-        Coord destino;
+        Coordenada destino;
         do {
             destino = bordes[rand() % num_bordes];
         } while (destino.x == origen.x && destino.y == origen.y);

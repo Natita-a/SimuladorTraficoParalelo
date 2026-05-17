@@ -1,21 +1,23 @@
 #ifndef AUTO_H
 #define AUTO_H
 
+#include "coordenada.h"
 #include "mapa.h"
 
 #define MAX_RUTA 100
 
 typedef struct {
     int id;
-    Coord origen;
-    Coord destino;
-    Coord ruta[MAX_RUTA];
+    Coordenada origen;
+    Coordenada destino;
+    Coordenada ruta[MAX_RUTA];
     int tam_ruta;
     int idx;
     int activo;
 } Auto;
 
-void crear_auto(Ciudad *c, Auto *a, int id, Coord origen, Coord destino);
+void crear_auto(Ciudad *c, Auto *a, int id, Coordenada origen,
+                Coordenada destino);
 void actualizar_auto(Ciudad *c, Auto *a);
 
-#endif
+#endif // !AUTO_H

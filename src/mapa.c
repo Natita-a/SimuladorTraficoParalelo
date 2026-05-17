@@ -1,12 +1,12 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "../include/mapa.h"
+#include "mapa.h"
 
 /* =========================
    POSICIONES DE SEMAFOROS
    ========================= */
-static const Coord POS_SEMAFOROS[NUM_SEMAFOROS] = {
+static const Coordenada POS_SEMAFOROS[NUM_SEMAFOROS] = {
     {0, 5}, {0, 10}, {1, 2}, {1, 7}, {2, 4},  {2, 10}, {3, 1},
     {3, 6}, {4, 3},  {4, 9}, {5, 5}, {5, 10}, {6, 2},  {6, 8},
     {7, 4}, {7, 10}, {8, 6}, {9, 1}, {9, 9},  {11, 5}};
@@ -73,9 +73,9 @@ void ciudad_init(Ciudad *c) {
         s->estado = VERDE;
         s->direccion = NORTE;
 
-        s->t_verde = 5;
-        s->t_amarillo = 2;
-        s->t_rojo = 6;
+        s->duracion_verde = 5;
+        s->duracion_amarillo = 2;
+        s->duracion_rojo = 6;
 
         s->timer = 0;
 
@@ -117,17 +117,17 @@ void actualizar_semaforos(Ciudad *c) {
 
         s->timer++;
 
-        if (s->estado == VERDE && s->timer >= s->t_verde) {
+        if (s->estado == VERDE && s->timer >= s->duracion_verde) {
             s->estado = AMARILLO;
             s->timer = 0;
         }
 
-        else if (s->estado == AMARILLO && s->timer >= s->t_amarillo) {
+        else if (s->estado == AMARILLO && s->timer >= s->duracion_amarillo) {
             s->estado = ROJO;
             s->timer = 0;
         }
 
-        else if (s->estado == ROJO && s->timer >= s->t_rojo) {
+        else if (s->estado == ROJO && s->timer >= s->duracion_rojo) {
             s->estado = VERDE;
             s->timer = 0;
         }
