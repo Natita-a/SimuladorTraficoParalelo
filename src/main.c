@@ -59,9 +59,15 @@ int main() {
 
         // Desocupa todas las intersecciones una vez los carros cruzaron dichas
         // intersecciones
-        for (size_t i = 0; i < FILAS; i++) {
+        /*for (size_t i = 0; i < FILAS; i++) {
             for (size_t j = 0; j < COLUMNAS; j++) {
                 ciudad.grid[FILAS - 1][COLUMNAS - 1].ocupada = false;
+            }
+        }*/
+
+          for (size_t i = 0;i <FILAS ; i++){
+            for(size_t j = 0;j < COLUMNAS; j++){
+                ciudad.grid[i][j].ocupada = false;
             }
         }
 
