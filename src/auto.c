@@ -22,6 +22,7 @@ Auto Auto_new(Ciudad *ciudad, int id, Coordenada origen, Coordenada destino) {
     return automovil;
 }
 
+/*
 void Auto_update(Auto *automovil, Ciudad *ciudad) {
     if (!automovil->activo)
         return;
@@ -56,6 +57,45 @@ void Auto_update(Auto *automovil, Ciudad *ciudad) {
     }
 
     automovil->idx++;
+}
+*/
+
+
+//Nuevo Auto_update
+
+void Auto_update(Auto *automovil, Ciudad *ciudad) {
+    if (!automovil->activo)
+        return;
+
+    if (automovil->idx >= automovil->tam_ruta) {
+        automovil->activo = false;
+        printf("Auto %d TERMINO en (%d,%d)\n", automovil->id,
+               automovil->destino.x, automovil->destino.y);
+        return;
+    }
+
+    Coordenada actual = (automovil->idx > 0)
+                        ? automovil->ruta[automovil->idx - 1]
+                        : automovil->origen;
+    Coordenada sig = automovil->ruta[automovil->idx];
+
+    Interseccion *inter_actual = &ciudad->grid[actual.x][actual.y];
+    if (inter_actual->tiene_semaforo) {
+        Semaforo *s = &ciudad->semaforos[inter_actual->id_semaforo];
+        if (s->estado == ROJO) {
+            printf("Auto %d en ROJO en (%d,%d)\n", automovil->id, actual.x, actual.y);
+            return;
+        }
+    }
+
+    Interseccion *inter_sig = &ciudad->grid[sig.x][sig.y];
+    if (!inter_sig->ocupada) {
+        if (automovil->idx > 0)
+            inter_actual->ocupada = false;
+        inter_sig->ocupada = true;
+        printf("Auto %d AVANZA a (%d,%d)\n", automovil->id, sig.x, sig.y);
+        automovil->idx++;
+    }
 }
 
 static int calcular_ruta(Ciudad *ciudad, Auto *automovil) {
