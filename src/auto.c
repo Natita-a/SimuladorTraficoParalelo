@@ -13,7 +13,7 @@ Auto Auto_new(Ciudad *ciudad, int id, Coordenada origen, Coordenada destino) {
         .destino = destino,
         .idx = 0,
         .tam_ruta = 0,
-        .activo = 1,
+        .activo = true,
     };
 
     calcular_ruta(ciudad, &automovil);
@@ -26,7 +26,7 @@ void Auto_update(Auto *automovil) {
         return;
 
     if (automovil->idx >= automovil->tam_ruta) {
-        automovil->activo = 0;
+        automovil->activo = false;
         printf("Auto %d TERMINO en (%d,%d)\n", automovil->id,
                automovil->destino.x, automovil->destino.y);
         return;

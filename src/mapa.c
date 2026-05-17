@@ -35,7 +35,7 @@ Ciudad Ciudad_new(void) {
                 .id = id++,
                 .posicion = {.x = fila, .y = columna},
                 .ocupada = 0,
-                .tiene_semaforo = 0,
+                .tiene_semaforo = false,
                 .id_semaforo = -1,
             };
         }

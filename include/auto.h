@@ -4,6 +4,8 @@
 #include "coordenada.h"
 #include "mapa.h"
 
+#include <stdbool.h>
+
 #define MAX_RUTA 100
 
 typedef struct {
@@ -13,7 +15,7 @@ typedef struct {
     Coordenada ruta[MAX_RUTA];
     int tam_ruta;
     int idx;
-    int activo;
+    bool activo;
 } Auto;
 
 Auto Auto_new(Ciudad *ciudad, int id, Coordenada origen, Coordenada destino);

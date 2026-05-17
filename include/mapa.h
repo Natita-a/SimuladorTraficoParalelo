@@ -2,6 +2,7 @@
 #define MAPA_H
 
 #include "coordenada.h"
+#include "interseccion.h"
 #include "semaforo.h"
 
 #define FILAS 12
@@ -11,14 +12,6 @@
 
 #define MAX_RUTA 100
 #define MAX_NOMBRE 32
-
-typedef struct {
-    int id;
-    Coordenada posicion;
-    int ocupada;
-    int tiene_semaforo;
-    int id_semaforo;
-} Interseccion;
 
 typedef struct {
     Interseccion grid[FILAS][COLUMNAS];
