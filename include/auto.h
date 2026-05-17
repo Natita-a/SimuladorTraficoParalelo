@@ -1,5 +1,5 @@
-#ifndef AUTO_H_INCLUDED
-#define AUTO_H_INCLUDED
+#ifndef AUTO_H
+#define AUTO_H
 
 #include "mapa.h"
 
@@ -7,14 +7,11 @@
 
 typedef struct {
     int id;
-
     Coord origen;
     Coord destino;
-
     Coord ruta[MAX_RUTA];
     int tam_ruta;
     int idx;
-
     int activo;
 } Auto;
 

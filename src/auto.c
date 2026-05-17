@@ -1,10 +1,10 @@
-#include "auto.h"
 #include <stdio.h>
+
+#include "../include/auto.h"
 
 #define INFINITO 99999
 
 static int calcular_ruta(Ciudad *c, Auto *a) {
-
     int dist[FILAS][COLUMNAS];
     int vis[FILAS][COLUMNAS];
     Coord padre[FILAS][COLUMNAS];
@@ -101,7 +101,6 @@ static int calcular_ruta(Ciudad *c, Auto *a) {
 // CREAR AUTO
 
 void crear_auto(Ciudad *c, Auto *a, int id, Coord origen, Coord destino) {
-
     a->id = id;
     a->origen = origen;
     a->destino = destino;
@@ -113,7 +112,6 @@ void crear_auto(Ciudad *c, Auto *a, int id, Coord origen, Coord destino) {
 }
 
 void actualizar_auto(Ciudad *c, Auto *a) {
-
     if (!a->activo)
         return;
 

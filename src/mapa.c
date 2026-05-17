@@ -1,13 +1,12 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "mapa.h"
+#include "../include/mapa.h"
 
 /* =========================
    POSICIONES DE SEMAFOROS
    ========================= */
 static const Coord POS_SEMAFOROS[NUM_SEMAFOROS] = {
-
     {0, 5}, {0, 10}, {1, 2}, {1, 7}, {2, 4},  {2, 10}, {3, 1},
     {3, 6}, {4, 3},  {4, 9}, {5, 5}, {5, 10}, {6, 2},  {6, 8},
     {7, 4}, {7, 10}, {8, 6}, {9, 1}, {9, 9},  {11, 5}};
@@ -16,7 +15,6 @@ static const Coord POS_SEMAFOROS[NUM_SEMAFOROS] = {
    INICIALIZAR CIUDAD
    ========================= */
 void ciudad_init(Ciudad *c) {
-
     /* Calles horizontales */
     strcpy(c->calles_h[0], "Av. Juarez");
     strcpy(c->calles_h[1], "Av. Cardenas");
@@ -49,9 +47,7 @@ void ciudad_init(Ciudad *c) {
     int id = 0;
 
     for (int fila = 0; fila < FILAS; fila++) {
-
         for (int columna = 0; columna < COLUMNAS; columna++) {
-
             Interseccion *inter = &c->grid[fila][columna];
 
             inter->id = id++;
@@ -60,9 +56,7 @@ void ciudad_init(Ciudad *c) {
             inter->posicion.y = columna;
 
             inter->ocupada = 0;
-
             inter->tiene_semaforo = 0;
-
             inter->id_semaforo = -1;
         }
     }
@@ -71,15 +65,12 @@ void ciudad_init(Ciudad *c) {
     c->num_semaforos = NUM_SEMAFOROS;
 
     for (int i = 0; i < NUM_SEMAFOROS; i++) {
-
         Semaforo *s = &c->semaforos[i];
 
         s->id = i;
 
         s->posicion = POS_SEMAFOROS[i];
-
         s->estado = VERDE;
-
         s->direccion = NORTE;
 
         s->t_verde = 5;
@@ -91,7 +82,6 @@ void ciudad_init(Ciudad *c) {
         Interseccion *inter = &c->grid[s->posicion.x][s->posicion.y];
 
         inter->tiene_semaforo = 1;
-
         inter->id_semaforo = i;
     }
 }
@@ -100,13 +90,10 @@ void ciudad_init(Ciudad *c) {
    IMPRIMIR MAPA
    ========================= */
 void ciudad_imprimir(const Ciudad *c) {
-
     printf("\n=== MAPA DE LA CIUDAD ===\n\n");
 
     for (int fila = 0; fila < FILAS; fila++) {
-
         for (int columna = 0; columna < COLUMNAS; columna++) {
-
             const Interseccion *inter = &c->grid[fila][columna];
 
             if (inter->tiene_semaforo)
@@ -125,31 +112,23 @@ void ciudad_imprimir(const Ciudad *c) {
    ACTUALIZAR SEMAFOROS
    ========================= */
 void actualizar_semaforos(Ciudad *c) {
-
     for (int i = 0; i < c->num_semaforos; i++) {
-
         Semaforo *s = &c->semaforos[i];
 
         s->timer++;
 
         if (s->estado == VERDE && s->timer >= s->t_verde) {
-
             s->estado = AMARILLO;
-
             s->timer = 0;
         }
 
         else if (s->estado == AMARILLO && s->timer >= s->t_amarillo) {
-
             s->estado = ROJO;
-
             s->timer = 0;
         }
 
         else if (s->estado == ROJO && s->timer >= s->t_rojo) {
-
             s->estado = VERDE;
-
             s->timer = 0;
         }
     }

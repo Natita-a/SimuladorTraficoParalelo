@@ -2,13 +2,12 @@
 #include <stdlib.h>
 #include <time.h>
 
-#include "auto.h"
-#include "mapa.h"
+#include "../include/auto.h"
+#include "../include/mapa.h"
 
 #define NUM_AUTOS 20
 
 int main() {
-
     srand(time(NULL));
 
     /* Inicializar ciudad */
@@ -27,7 +26,6 @@ int main() {
     Auto autos[NUM_AUTOS];
 
     for (int i = 0; i < NUM_AUTOS; i++) {
-
         Coord origen = bordes[i % num_bordes];
 
         Coord destino;
@@ -48,7 +46,6 @@ int main() {
     int todos_llegaron = 0;
 
     while (!todos_llegaron) {
-
         paso++;
         printf("\n== Paso %d ==\n", paso);
 
