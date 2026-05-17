@@ -22,14 +22,14 @@ typedef struct {
 
 typedef struct {
     Interseccion grid[FILAS][COLUMNAS];
-    char calles_h[FILAS][MAX_NOMBRE];
-    char calles_v[COLUMNAS][MAX_NOMBRE];
+    const char *calles_h[FILAS];
+    const char *calles_v[COLUMNAS];
     Semaforo semaforos[NUM_SEMAFOROS];
     int num_semaforos;
 } Ciudad;
 
-void ciudad_init(Ciudad *c);
-void ciudad_imprimir(const Ciudad *c);
-void actualizar_semaforos(Ciudad *c);
+Ciudad Ciudad_new(void);
+void Ciudad_imprimir(const Ciudad *c);
+void Ciudad_actualizar_semaforos(Ciudad *c);
 
 #endif // !MAPA_H

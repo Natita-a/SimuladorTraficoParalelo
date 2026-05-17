@@ -16,8 +16,7 @@ typedef struct {
     int activo;
 } Auto;
 
-void crear_auto(Ciudad *c, Auto *a, int id, Coordenada origen,
-                Coordenada destino);
-void actualizar_auto(Ciudad *c, Auto *a);
+Auto Auto_new(Ciudad *ciudad, int id, Coordenada origen, Coordenada destino);
+void Auto_update(Auto *a);
 
 #endif // !AUTO_H

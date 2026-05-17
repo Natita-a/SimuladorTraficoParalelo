@@ -1,5 +1,4 @@
 #include <stdio.h>
-#include <string.h>
 
 #include "mapa.h"
 
@@ -12,84 +11,61 @@ static const Coordenada POS_SEMAFOROS[NUM_SEMAFOROS] = {
     {7, 4}, {7, 10}, {8, 6}, {9, 1}, {9, 9},  {11, 5}};
 
 /* =========================
-   INICIALIZAR CIUDAD
+   CREAR CIUDAD
    ========================= */
-void ciudad_init(Ciudad *c) {
-    /* Calles horizontales */
-    strcpy(c->calles_h[0], "Av. Juarez");
-    strcpy(c->calles_h[1], "Av. Cardenas");
-    strcpy(c->calles_h[2], "Av. Porfirio Diaz");
-    strcpy(c->calles_h[3], "Av. Madero");
-    strcpy(c->calles_h[4], "Av. Carranza");
-    strcpy(c->calles_h[5], "Av. Obregon");
-    strcpy(c->calles_h[6], "Av. Calles");
-    strcpy(c->calles_h[7], "Av. Avila Camacho");
-    strcpy(c->calles_h[8], "Av. Aleman");
-    strcpy(c->calles_h[9], "Av. Ruiz Cortines");
-    strcpy(c->calles_h[10], "Av. Lopez Mateos");
-    strcpy(c->calles_h[11], "Av. Echeverria");
 
-    /* Calles verticales */
-    strcpy(c->calles_v[0], "C. Gpe. Victoria");
-    strcpy(c->calles_v[1], "C. Bustamante");
-    strcpy(c->calles_v[2], "C. Pedraza");
-    strcpy(c->calles_v[3], "C. Santa Anna");
-    strcpy(c->calles_v[4], "C. Herrera");
-    strcpy(c->calles_v[5], "C. Paredes");
-    strcpy(c->calles_v[6], "C. Arista");
-    strcpy(c->calles_v[7], "C. De la Fuente");
-    strcpy(c->calles_v[8], "C. Comonfort");
-    strcpy(c->calles_v[9], "C. Lerdo");
-    strcpy(c->calles_v[10], "Av. Gonzalez");
-    strcpy(c->calles_v[11], "C. Manuel Gonzalez");
+Ciudad Ciudad_new(void) {
+    Ciudad ciudad = {
+        .calles_h = {"Av. Juarez", "Av. Cardenas", "Av. Porfirio Diaz",
+                     "Av. Madero", "Av. Carranza", "Av. Obregon", "Av. Calles",
+                     "Av. Avila Camacho", "Av. Aleman", "Av. Ruiz Cortines",
+                     "Av. Lopez Mateos", "Av. Echeverria"},
+        .calles_v = {"C. Gpe. Victoria", "C. Bustamante", "C. Pedraza",
+                     "C. Santa Anna", "C. Herrera", "C. Paredes", "C. Arista",
+                     "C. De la Fuente", "C. Comonfort", "C. Lerdo",
+                     "Av. Gonzalez", "C. Manuel Gonzalez"},
+        .num_semaforos = NUM_SEMAFOROS,
+    };
 
     /* Inicializar intersecciones */
     int id = 0;
-
     for (int fila = 0; fila < FILAS; fila++) {
         for (int columna = 0; columna < COLUMNAS; columna++) {
-            Interseccion *inter = &c->grid[fila][columna];
-
-            inter->id = id++;
-
-            inter->posicion.x = fila;
-            inter->posicion.y = columna;
-
-            inter->ocupada = 0;
-            inter->tiene_semaforo = 0;
-            inter->id_semaforo = -1;
+            ciudad.grid[fila][columna] = (Interseccion){
+                .id = id++,
+                .posicion = {.x = fila, .y = columna},
+                .ocupada = 0,
+                .tiene_semaforo = 0,
+                .id_semaforo = -1,
+            };
         }
     }
 
     /* Crear semaforos */
-    c->num_semaforos = NUM_SEMAFOROS;
-
     for (int i = 0; i < NUM_SEMAFOROS; i++) {
-        Semaforo *s = &c->semaforos[i];
+        ciudad.semaforos[i] = (Semaforo){
+            .id = i,
+            .posicion = POS_SEMAFOROS[i],
+            .estado = VERDE,
+            .direccion = NORTE,
+            .duracion_verde = 5,
+            .duracion_amarillo = 2,
+            .duracion_rojo = 6,
+            .timer = 0,
+        };
 
-        s->id = i;
-
-        s->posicion = POS_SEMAFOROS[i];
-        s->estado = VERDE;
-        s->direccion = NORTE;
-
-        s->duracion_verde = 5;
-        s->duracion_amarillo = 2;
-        s->duracion_rojo = 6;
-
-        s->timer = 0;
-
-        Interseccion *inter = &c->grid[s->posicion.x][s->posicion.y];
-
+        Interseccion *inter = &ciudad.grid[ciudad.semaforos[i].posicion.x]
+                                          [ciudad.semaforos[i].posicion.y];
         inter->tiene_semaforo = 1;
         inter->id_semaforo = i;
     }
-}
 
+    return ciudad;
+}
 /* =========================
    IMPRIMIR MAPA
    ========================= */
-void ciudad_imprimir(const Ciudad *c) {
+void Ciudad_imprimir(const Ciudad *c) {
     printf("\n=== MAPA DE LA CIUDAD ===\n\n");
 
     for (int fila = 0; fila < FILAS; fila++) {
@@ -101,17 +77,15 @@ void ciudad_imprimir(const Ciudad *c) {
             else
                 printf(" [+]");
         }
-
         printf("\n");
     }
-
     printf("\n");
 }
 
 /* =========================
    ACTUALIZAR SEMAFOROS
    ========================= */
-void actualizar_semaforos(Ciudad *c) {
+void Ciudad_actualizar_semaforos(Ciudad *c) {
     for (int i = 0; i < c->num_semaforos; i++) {
         Semaforo *s = &c->semaforos[i];
 

@@ -11,9 +11,8 @@ int main() {
     srand(time(NULL));
 
     /* Inicializar ciudad */
-    Ciudad ciudad;
-    ciudad_init(&ciudad);
-    ciudad_imprimir(&ciudad);
+    Ciudad ciudad = Ciudad_new();
+    Ciudad_imprimir(&ciudad);
 
     /* Puntos de entrada en los bordes del mapa */
     Coordenada bordes[] = {{0, 0},  {0, 3},  {0, 6},  {0, 9},  {0, 11},
@@ -33,7 +32,7 @@ int main() {
             destino = bordes[rand() % num_bordes];
         } while (destino.x == origen.x && destino.y == origen.y);
 
-        crear_auto(&ciudad, &autos[i], i, origen, destino);
+        autos[i] = Auto_new(&ciudad, i, origen, destino);
 
         printf("Auto %d: (%d,%d) -> (%d,%d)\n", i, origen.x, origen.y,
                destino.x, destino.y);
@@ -50,11 +49,11 @@ int main() {
         printf("\n== Paso %d ==\n", paso);
 
         /* Actualizar semaforos */
-        actualizar_semaforos(&ciudad);
+        Ciudad_actualizar_semaforos(&ciudad);
 
         /* Mover todos los autos */
         for (int i = 0; i < NUM_AUTOS; i++)
-            actualizar_auto(&ciudad, &autos[i]);
+            Auto_update(&autos[i]);
 
         /* Verificar si todos llegaron */
         todos_llegaron = 1;

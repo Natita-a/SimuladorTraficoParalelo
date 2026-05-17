@@ -4,7 +4,42 @@
 
 #define INFINITO 99999
 
-static int calcular_ruta(Ciudad *c, Auto *a) {
+static int calcular_ruta(Ciudad *ciudad, Auto *automovil);
+
+Auto Auto_new(Ciudad *ciudad, int id, Coordenada origen, Coordenada destino) {
+    Auto automovil = {
+        .id = id,
+        .origen = origen,
+        .destino = destino,
+        .idx = 0,
+        .tam_ruta = 0,
+        .activo = 1,
+    };
+
+    calcular_ruta(ciudad, &automovil);
+
+    return automovil;
+}
+
+void Auto_update(Auto *automovil) {
+    if (!automovil->activo)
+        return;
+
+    if (automovil->idx >= automovil->tam_ruta) {
+        automovil->activo = 0;
+        printf("Auto %d TERMINO en (%d,%d)\n", automovil->id,
+               automovil->destino.x, automovil->destino.y);
+        return;
+    }
+
+    Coordenada sig = automovil->ruta[automovil->idx];
+
+    printf("Auto %d AVANZA a (%d,%d)\n", automovil->id, sig.x, sig.y);
+
+    automovil->idx++;
+}
+
+static int calcular_ruta(Ciudad *ciudad, Auto *automovil) {
     int dist[FILAS][COLUMNAS];
     int vis[FILAS][COLUMNAS];
     Coordenada padre[FILAS][COLUMNAS];
@@ -21,7 +56,7 @@ static int calcular_ruta(Ciudad *c, Auto *a) {
         }
     }
 
-    dist[a->origen.x][a->origen.y] = 0;
+    dist[automovil->origen.x][automovil->origen.y] = 0;
 
     for (int k = 0; k < FILAS * COLUMNAS; k++) {
 
@@ -41,7 +76,7 @@ static int calcular_ruta(Ciudad *c, Auto *a) {
         if (u.x == -1)
             break;
 
-        if (u.x == a->destino.x && u.y == a->destino.y)
+        if (u.x == automovil->destino.x && u.y == automovil->destino.y)
             break;
 
         vis[u.x][u.y] = 1;
@@ -59,7 +94,7 @@ static int calcular_ruta(Ciudad *c, Auto *a) {
 
             int peso = 1;
 
-            if (c->grid[nx][ny].tiene_semaforo)
+            if (ciudad->grid[nx][ny].tiene_semaforo)
                 peso = 2;
 
             int nd = dist[u.x][u.y] + peso;
@@ -71,61 +106,29 @@ static int calcular_ruta(Ciudad *c, Auto *a) {
         }
     }
 
-    if (dist[a->destino.x][a->destino.y] == INFINITO) {
-        printf("Auto %d: no se encontro ruta\n", a->id);
+    if (dist[automovil->destino.x][automovil->destino.y] == INFINITO) {
+        printf("Auto %d: no se encontro ruta\n", automovil->id);
         return 0;
     }
 
     Coordenada tmp[MAX_RUTA];
     int n = 0;
-    Coordenada cur = a->destino;
+    Coordenada cur = automovil->destino;
 
-    while (!(cur.x == a->origen.x && cur.y == a->origen.y)) {
+    while (!(cur.x == automovil->origen.x && cur.y == automovil->origen.y)) {
         tmp[n++] = cur;
         cur = padre[cur.x][cur.y];
         if (n >= MAX_RUTA)
             break;
     }
 
-    tmp[n++] = a->origen;
+    tmp[n++] = automovil->origen;
 
-    a->tam_ruta = n;
+    automovil->tam_ruta = n;
 
     for (int i = 0; i < n; i++) {
-        a->ruta[i] = tmp[n - 1 - i];
+        automovil->ruta[i] = tmp[n - 1 - i];
     }
 
     return 1;
-}
-
-// CREAR AUTO
-
-void crear_auto(Ciudad *c, Auto *a, int id, Coordenada origen,
-                Coordenada destino) {
-    a->id = id;
-    a->origen = origen;
-    a->destino = destino;
-    a->idx = 0;
-    a->tam_ruta = 0;
-    a->activo = 1;
-
-    calcular_ruta(c, a);
-}
-
-void actualizar_auto(Ciudad *c, Auto *a) {
-    if (!a->activo)
-        return;
-
-    if (a->idx >= a->tam_ruta) {
-        a->activo = 0;
-        printf("Auto %d TERMINO en (%d,%d)\n", a->id, a->destino.x,
-               a->destino.y);
-        return;
-    }
-
-    Coordenada sig = a->ruta[a->idx];
-
-    printf("Auto %d AVANZA a (%d,%d)\n", a->id, sig.x, sig.y);
-
-    a->idx++;
 }
