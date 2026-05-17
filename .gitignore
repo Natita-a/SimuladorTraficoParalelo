@@ -77,6 +77,17 @@ dkms.conf
 
 # End of https://www.toptal.com/developers/gitignore/api/c
 
+# Created by https://www.toptal.com/developers/gitignore/api/vim,visualstudiocode,codeblocks
+# Edit at https://www.toptal.com/developers/gitignore?templates=vim,visualstudiocode,codeblocks
+
+### CodeBlocks ###
+# specific to CodeBlocks IDE
+*.layout
+*.depend
+# generated directories
+bin/
+obj/
+
 ### Vim ###
 # Swap
 [._]*.s[a-v][a-z]
@@ -117,7 +128,7 @@ tags
 .history
 .ionide
 
-# End of https://www.toptal.com/developers/gitignore/api/vim,visualstudiocode
+# End of https://www.toptal.com/developers/gitignore/api/vim,visualstudiocode,codeblocks
 
 #### SECURITY: In order to reduce risks ####
 
