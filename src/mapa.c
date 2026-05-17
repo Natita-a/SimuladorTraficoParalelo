@@ -47,7 +47,8 @@ Ciudad Ciudad_new(void) {
         ciudad.semaforos[i] = (Semaforo){
             .id = i,
             .posicion = POS_SEMAFOROS[i],
-            .estado = VERDE,
+            /*Se agrega oara que semaforos inicien algunos en VERDE y otro en ROJO*/
+            .estado = (i % 2 == 0) ? VERDE : ROJO,
             .direccion = NORTE,
             .duracion_verde = 5,
             .duracion_amarillo = 2,
