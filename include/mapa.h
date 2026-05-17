@@ -22,7 +22,7 @@ typedef struct {
 } Ciudad;
 
 Ciudad Ciudad_new(void);
-void Ciudad_imprimir(const Ciudad *c);
-void Ciudad_actualizar_semaforos(Ciudad *c);
+void Ciudad_imprimir(const Ciudad *ciudad);
+void Ciudad_actualizar_semaforos(Ciudad *ciudad);
 
 #endif // !MAPA_H

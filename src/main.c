@@ -1,3 +1,4 @@
+#include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -50,12 +51,22 @@ int main() {
         printf("\n== Paso %d ==\n", paso);
 
         /* Actualizar semaforos */
-        sleep_ms(1000);
         Ciudad_actualizar_semaforos(&ciudad);
 
         /* Mover todos los autos */
         for (int i = 0; i < NUM_AUTOS; i++)
-            Auto_update(&autos[i]);
+            Auto_update(&autos[i], &ciudad);
+
+        // Desocupa todas las intersecciones una vez los carros cruzaron dichas
+        // intersecciones
+        for (size_t i = 0; i < FILAS; i++) {
+            for (size_t j = 0; j < COLUMNAS; j++) {
+                ciudad.grid[FILAS - 1][COLUMNAS - 1].ocupada = false;
+            }
+        }
+
+        // Espera el segundo "trancurrido"
+        sleep_ms(1000);
 
         /* Verificar si todos llegaron */
         todos_llegaron = 1;

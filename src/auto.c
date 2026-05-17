@@ -1,3 +1,4 @@
+#include <stddef.h>
 #include <stdio.h>
 
 #include "auto.h"
@@ -21,7 +22,7 @@ Auto Auto_new(Ciudad *ciudad, int id, Coordenada origen, Coordenada destino) {
     return automovil;
 }
 
-void Auto_update(Auto *automovil) {
+void Auto_update(Auto *automovil, Ciudad *ciudad) {
     if (!automovil->activo)
         return;
 
@@ -32,9 +33,27 @@ void Auto_update(Auto *automovil) {
         return;
     }
 
-    Coordenada sig = automovil->ruta[automovil->idx];
+    int *x = &automovil->ruta[0].x;
+    int *y = &automovil->ruta[0].y;
 
-    printf("Auto %d AVANZA a (%d,%d)\n", automovil->id, sig.x, sig.y);
+    // FIX: Evitar que el auto avance solo cuando su semáforo se encuentra en
+    // ROJO
+    for (size_t i; i < 4; i++) {
+        if (ciudad->grid[*x][*y].semaforos[i].estado == ROJO) {
+            printf("Auto %d en ROJO\n", automovil->id);
+            break;
+        }
+    }
+
+    Interseccion *interseccion = &ciudad->grid[*x][*y];
+
+    // Auto avanza cuando la interseccion está desocupada
+    if (!interseccion->ocupada) {
+        interseccion->ocupada = true;
+        Coordenada sig = automovil->ruta[automovil->idx];
+
+        printf("Auto %d AVANZA a (%d,%d)\n", automovil->id, sig.x, sig.y);
+    }
 
     automovil->idx++;
 }
