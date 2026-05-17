@@ -68,14 +68,15 @@ Ciudad Ciudad_new(void) {
    ========================= */
 void Ciudad_imprimir(const Ciudad *c) {
     printf("\n=== MAPA DE LA CIUDAD ===\n\n");
-
     for (int fila = 0; fila < FILAS; fila++) {
         for (int columna = 0; columna < COLUMNAS; columna++) {
             const Interseccion *inter = &c->grid[fila][columna];
-
-            if (inter->tiene_semaforo)
-                printf(" [S]");
-            else
+            if (inter->tiene_semaforo) {
+                const Semaforo *s = &c->semaforos[inter->id_semaforo];
+                char letra = (s->estado == VERDE)    ? 'V' :
+                             (s->estado == AMARILLO)  ? 'A' : 'R';
+                printf(" [%c]", letra);
+            } else
                 printf(" [+]");
         }
         printf("\n");
