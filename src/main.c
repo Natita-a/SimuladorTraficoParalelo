@@ -4,6 +4,7 @@
 
 #include "auto.h"
 #include "mapa.h"
+#include "sleep.h"
 
 #define NUM_AUTOS 20
 
@@ -49,6 +50,7 @@ int main() {
         printf("\n== Paso %d ==\n", paso);
 
         /* Actualizar semaforos */
+        sleep_ms(1000);
         Ciudad_actualizar_semaforos(&ciudad);
 
         /* Mover todos los autos */

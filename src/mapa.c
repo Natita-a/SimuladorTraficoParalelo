@@ -1,3 +1,4 @@
+#include <stdint.h>
 #include <stdio.h>
 
 #include "mapa.h"
@@ -91,19 +92,25 @@ void Ciudad_actualizar_semaforos(Ciudad *c) {
 
         s->timer++;
 
-        if (s->estado == VERDE && s->timer >= s->duracion_verde) {
-            s->estado = AMARILLO;
-            s->timer = 0;
-        }
-
-        else if (s->estado == AMARILLO && s->timer >= s->duracion_amarillo) {
-            s->estado = ROJO;
-            s->timer = 0;
-        }
-
-        else if (s->estado == ROJO && s->timer >= s->duracion_rojo) {
-            s->estado = VERDE;
-            s->timer = 0;
+        switch (s->estado) {
+            case VERDE:
+                if (s->timer >= s->duracion_verde) {
+                    s->estado = AMARILLO;
+                    s->timer = 0;
+                }
+                break;
+            case AMARILLO:
+                if (s->timer >= s->duracion_amarillo) {
+                    s->estado = ROJO;
+                    s->timer = 0;
+                }
+                break;
+            case ROJO:
+                if (s->timer >= s->duracion_rojo) {
+                    s->estado = VERDE;
+                    s->timer = 0;
+                }
+                break;
         }
     }
 }
