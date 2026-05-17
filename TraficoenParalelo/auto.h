@@ -19,7 +19,7 @@ typedef struct {
 } Auto;
 
 void crear_auto(Ciudad *c, Auto *a, int id, Coord origen, Coord destino);
-
 void actualizar_auto(Ciudad *c, Auto *a);
 
 #endif
+
