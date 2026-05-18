@@ -1,17 +1,13 @@
 #ifndef MAPA_H
 #define MAPA_H
 
-#include "coordenada.h"
+#include "config.h"
 #include "interseccion.h"
 #include "semaforo.h"
 
 #define FILAS 12
 #define COLUMNAS 12
-
 #define NUM_SEMAFOROS 20
-
-#define MAX_RUTA 100
-#define MAX_NOMBRE 32
 
 typedef struct {
     Interseccion grid[FILAS][COLUMNAS];
@@ -21,8 +17,8 @@ typedef struct {
     int num_semaforos;
 } Ciudad;
 
-Ciudad Ciudad_new(void);
+Ciudad Ciudad_new(const Config *cfg);
 void Ciudad_imprimir(const Ciudad *ciudad);
 void Ciudad_actualizar_semaforos(Ciudad *ciudad);
 
-#endif // !MAPA_H
+#endif // MAPA_H

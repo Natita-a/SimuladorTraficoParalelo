@@ -5,24 +5,24 @@
 
 #include "coordenada.h"
 
-typedef enum { ROJO, AMARILLO, VERDE } EstadoSemaforo;
-typedef enum { NORTE, SUR, ESTE, OESTE } Direccion;
+typedef enum { VERDE = 0, AMARILLO, ROJO } EstadoSemaforo;
+
+typedef enum { NORTE = 0, SUR, ESTE, OESTE } Direccion;
 
 typedef struct {
     uint8_t id;
     EstadoSemaforo estado;
     Direccion direccion;
-    uint8_t duracion_verde;
-    uint8_t duracion_amarillo;
-    uint8_t duracion_rojo;
-    uint8_t timer;
+    uint16_t duracion_verde;
+    uint16_t duracion_amarillo;
+    uint16_t duracion_rojo;
+    uint16_t timer;
     Coordenada posicion;
 } Semaforo;
 
-// Contructor
 Semaforo Semaforo_new(uint8_t id, EstadoSemaforo estado, Direccion direccion,
-                      uint8_t duracion_verde, uint8_t duracion_amarillo,
-                      uint8_t duracion_rojo, uint8_t timer,
+                      uint16_t duracion_verde, uint16_t duracion_amarillo,
+                      uint16_t duracion_rojo, uint16_t timer,
                       Coordenada posicion);
 
-#endif // !COORD_H
+#endif // SEMAFORO_H

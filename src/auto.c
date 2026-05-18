@@ -1,7 +1,6 @@
-#include <stddef.h>
-#include <stdio.h>
-
 #include "auto.h"
+
+#include <stdio.h>
 
 #define INFINITO 99999
 
@@ -18,11 +17,9 @@ Auto Auto_new(Ciudad *ciudad, int id, Coordenada origen, Coordenada destino) {
     };
 
     calcular_ruta(ciudad, &automovil);
-
     return automovil;
 }
 
-// Nuevo Auto_update
 void Auto_update(Auto *automovil, Ciudad *ciudad) {
     if (!automovil->activo)
         return;
@@ -79,7 +76,6 @@ static int calcular_ruta(Ciudad *ciudad, Auto *automovil) {
     dist[automovil->origen.x][automovil->origen.y] = 0;
 
     for (int k = 0; k < FILAS * COLUMNAS; k++) {
-
         Coordenada u = {-1, -1};
         int menor = INFINITO;
 
@@ -102,21 +98,15 @@ static int calcular_ruta(Ciudad *ciudad, Auto *automovil) {
         vis[u.x][u.y] = 1;
 
         for (int d = 0; d < 4; d++) {
-
             int nx = u.x + dx[d];
             int ny = u.y + dy[d];
 
             if (nx < 0 || nx >= FILAS || ny < 0 || ny >= COLUMNAS)
                 continue;
-
             if (vis[nx][ny])
                 continue;
 
-            int peso = 1;
-
-            if (ciudad->grid[nx][ny].tiene_semaforo)
-                peso = 2;
-
+            int peso = ciudad->grid[nx][ny].tiene_semaforo ? 2 : 1;
             int nd = dist[u.x][u.y] + peso;
 
             if (nd < dist[nx][ny]) {
@@ -143,12 +133,10 @@ static int calcular_ruta(Ciudad *ciudad, Auto *automovil) {
     }
 
     tmp[n++] = automovil->origen;
-
     automovil->tam_ruta = n;
 
-    for (int i = 0; i < n; i++) {
+    for (int i = 0; i < n; i++)
         automovil->ruta[i] = tmp[n - 1 - i];
-    }
 
     return 1;
 }
