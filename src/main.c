@@ -1,15 +1,22 @@
+#include <stdbool.h>
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 
 #include "auto.h"
+#include "config.h"
 #include "mapa.h"
 #include "sleep.h"
 
 #define NUM_AUTOS 20
 
-int main() {
+int main(void) {
+    // Program config
+    Config cfg = config_defaults();
+    cfg = config_from_file(DEFAULT_CONFIG_PATH, cfg);
+    config_print(&cfg, DEFAULT_CONFIG_PATH);
+
     srand(time(NULL));
 
     /* Inicializar ciudad */
@@ -78,5 +85,5 @@ int main() {
 
     printf("\n--- FIN: todos llegaron en %d pasos ---\n", paso);
 
-    return 0;
+    return EXIT_SUCCESS;
 }

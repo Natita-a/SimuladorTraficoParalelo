@@ -11,7 +11,7 @@ STD          := c17
 # --- Directories --------------------------------------------------------------
 
 SRC_DIR     := src
-INC_DIR     := include
+INC_DIR     := include third_party/tomlc17/src
 TEST_DIR    := tests
 TARGET_DIR  := target
 
@@ -23,7 +23,7 @@ RELEASE_OBJ_DIR := $(RELEASE_DIR)/obj
 
 # --- Sources ------------------------------------------------------------------
 
-SRCS       := $(shell find $(SRC_DIR) -name '*.c')
+SRCS       := $(shell find $(SRC_DIR) -name '*.c') third_party/tomlc17/src/tomlc17.c
 TEST_SRCS  := $(shell find $(TEST_DIR) -name '*.c' 2>/dev/null)
 
 # Non-main sources for linking with test runner (avoids duplicate main)
@@ -34,11 +34,11 @@ RELEASE_OBJS := $(patsubst $(SRC_DIR)/%.c, $(RELEASE_OBJ_DIR)/%.o, $(SRCS))
 
 # --- Flags --------------------------------------------------------------------
 
-COMMON_FLAGS := -std=$(STD) -Wall -Wextra -Wpedantic -I$(INC_DIR)
+COMMON_FLAGS := -std=$(STD) -Wall -Wextra -Wpedantic $(addprefix -I, $(INC_DIR)) -fopenmp
 DEBUG_FLAGS  := $(COMMON_FLAGS) -g -O0 -DDEBUG -fsanitize=address,undefined
 RELEASE_FLAGS:= $(COMMON_FLAGS) -O3 -DNDEBUG -march=native
 
-LDFLAGS      :=
+LDFLAGS      := -fopenmp
 # e.g., LDFLAGS := -lm -lpthread
 
 # --- Binaries -----------------------------------------------------------------
