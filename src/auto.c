@@ -22,47 +22,7 @@ Auto Auto_new(Ciudad *ciudad, int id, Coordenada origen, Coordenada destino) {
     return automovil;
 }
 
-/*
-void Auto_update(Auto *automovil, Ciudad *ciudad) {
-    if (!automovil->activo)
-        return;
-
-    if (automovil->idx >= automovil->tam_ruta) {
-        automovil->activo = false;
-        printf("Auto %d TERMINO en (%d,%d)\n", automovil->id,
-               automovil->destino.x, automovil->destino.y);
-        return;
-    }
-
-    int *x = &automovil->ruta[0].x;
-    int *y = &automovil->ruta[0].y;
-
-    // FIX: Evitar que el auto avance solo cuando su semáforo se encuentra en
-    // ROJO
-    for (size_t i; i < 4; i++) {
-        if (ciudad->grid[*x][*y].semaforos[i].estado == ROJO) {
-            printf("Auto %d en ROJO\n", automovil->id);
-            break;
-        }
-    }
-
-    Interseccion *interseccion = &ciudad->grid[*x][*y];
-
-    // Auto avanza cuando la interseccion está desocupada
-    if (!interseccion->ocupada) {
-        interseccion->ocupada = true;
-        Coordenada sig = automovil->ruta[automovil->idx];
-
-        printf("Auto %d AVANZA a (%d,%d)\n", automovil->id, sig.x, sig.y);
-    }
-
-    automovil->idx++;
-}
-*/
-
-
-//Nuevo Auto_update
-
+// Nuevo Auto_update
 void Auto_update(Auto *automovil, Ciudad *ciudad) {
     if (!automovil->activo)
         return;
@@ -75,15 +35,16 @@ void Auto_update(Auto *automovil, Ciudad *ciudad) {
     }
 
     Coordenada actual = (automovil->idx > 0)
-                        ? automovil->ruta[automovil->idx - 1]
-                        : automovil->origen;
+                            ? automovil->ruta[automovil->idx - 1]
+                            : automovil->origen;
     Coordenada sig = automovil->ruta[automovil->idx];
 
     Interseccion *inter_actual = &ciudad->grid[actual.x][actual.y];
     if (inter_actual->tiene_semaforo) {
         Semaforo *s = &ciudad->semaforos[inter_actual->id_semaforo];
         if (s->estado == ROJO) {
-            printf("Auto %d en ROJO en (%d,%d)\n", automovil->id, actual.x, actual.y);
+            printf("Auto %d en ROJO en (%d,%d)\n", automovil->id, actual.x,
+                   actual.y);
             return;
         }
     }

@@ -47,7 +47,8 @@ Ciudad Ciudad_new(void) {
         ciudad.semaforos[i] = (Semaforo){
             .id = i,
             .posicion = POS_SEMAFOROS[i],
-            /*Se agrega oara que semaforos inicien algunos en VERDE y otro en ROJO*/
+            /*Se agrega oara que semaforos inicien algunos en VERDE y otro en
+               ROJO*/
             .estado = (i % 2 == 0) ? VERDE : ROJO,
             .direccion = NORTE,
             .duracion_verde = 5,
@@ -74,8 +75,9 @@ void Ciudad_imprimir(const Ciudad *c) {
             const Interseccion *inter = &c->grid[fila][columna];
             if (inter->tiene_semaforo) {
                 const Semaforo *s = &c->semaforos[inter->id_semaforo];
-                char letra = (s->estado == VERDE)    ? 'V' :
-                             (s->estado == AMARILLO)  ? 'A' : 'R';
+                char letra = (s->estado == VERDE)      ? 'V'
+                             : (s->estado == AMARILLO) ? 'A'
+                                                       : 'R';
                 printf(" [%c]", letra);
             } else
                 printf(" [+]");
