@@ -1,5 +1,7 @@
-#include "mapa.h"
+// src/mapa.c
+#include "../include/mapa.h"
 
+#include <omp.h>
 #include <stdio.h>
 
 static const Coordenada POS_SEMAFOROS[NUM_SEMAFOROS] = {
@@ -29,6 +31,7 @@ Ciudad Ciudad_new(const Config *cfg) {
         for (int columna = 0; columna < COLUMNAS; columna++) {
             ciudad.grid[fila][columna] =
                 Interseccion_new(id++, (Coordenada){.x = fila, .y = columna});
+            omp_init_lock(&ciudad.grid_locks[fila][columna]);
         }
     }
 
@@ -44,6 +47,12 @@ Ciudad Ciudad_new(const Config *cfg) {
     }
 
     return ciudad;
+}
+
+void Ciudad_destroy(Ciudad *ciudad) {
+    for (int i = 0; i < FILAS; i++)
+        for (int j = 0; j < COLUMNAS; j++)
+            omp_destroy_lock(&ciudad->grid_locks[i][j]);
 }
 
 void Ciudad_imprimir(const Ciudad *c) {
@@ -66,9 +75,12 @@ void Ciudad_imprimir(const Ciudad *c) {
     printf("\n");
 }
 
+// Each semaphore runs as an independent thread — no shared writes between them
 void Ciudad_actualizar_semaforos(Ciudad *c) {
+#pragma omp parallel for schedule(static)
     for (int i = 0; i < c->num_semaforos; i++) {
         Semaforo *s = &c->semaforos[i];
+#pragma omp atomic update
         s->timer++;
 
         switch (s->estado) {
@@ -92,4 +104,6 @@ void Ciudad_actualizar_semaforos(Ciudad *c) {
                 break;
         }
     }
+    // Implicit barrier: all semaphore threads finish before vehicles read
+    // estado
 }

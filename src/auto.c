@@ -1,5 +1,6 @@
-#include "auto.h"
+#include "../include/auto.h"
 
+#include <omp.h>
 #include <stdio.h>
 
 #define INFINITO 99999
@@ -16,6 +17,9 @@ Auto Auto_new(Ciudad *ciudad, int id, Coordenada origen, Coordenada destino) {
         .activo = true,
     };
 
+    // calcular_ruta is thread-safe: uses only thread-local stack arrays and
+    // reads ciudad->grid fields that are immutable after Ciudad_new (i.e.,
+    // tiene_semaforo). No locks needed here.
     calcular_ruta(ciudad, &automovil);
     return automovil;
 }
@@ -26,6 +30,7 @@ void Auto_update(Auto *automovil, Ciudad *ciudad) {
 
     if (automovil->idx >= automovil->tam_ruta) {
         automovil->activo = false;
+#pragma omp critical(stdout)
         printf("Auto %d TERMINO en (%d,%d)\n", automovil->id,
                automovil->destino.x, automovil->destino.y);
         return;
@@ -36,26 +41,38 @@ void Auto_update(Auto *automovil, Ciudad *ciudad) {
                             : automovil->origen;
     Coordenada sig = automovil->ruta[automovil->idx];
 
+    // Semaphore state is read-only during the vehicle phase — semaforos were
+    // fully updated (with an implicit barrier) before this parallel region.
     Interseccion *inter_actual = &ciudad->grid[actual.x][actual.y];
     if (inter_actual->tiene_semaforo) {
         Semaforo *s = &ciudad->semaforos[inter_actual->id_semaforo];
         if (s->estado == ROJO) {
+#pragma omp critical(stdout)
             printf("Auto %d en ROJO en (%d,%d)\n", automovil->id, actual.x,
                    actual.y);
             return;
         }
     }
 
+    // Lock only the destination cell. The source cell is exclusively owned by
+    // this vehicle (no two vehicles share a position), so setting it to false
+    // is safe without a lock.
     Interseccion *inter_sig = &ciudad->grid[sig.x][sig.y];
+    omp_set_lock(&ciudad->grid_locks[sig.x][sig.y]);
+
     if (!inter_sig->ocupada) {
         if (automovil->idx > 0)
             inter_actual->ocupada = false;
         inter_sig->ocupada = true;
+#pragma omp critical(stdout)
         printf("Auto %d AVANZA a (%d,%d)\n", automovil->id, sig.x, sig.y);
         automovil->idx++;
     }
+
+    omp_unset_lock(&ciudad->grid_locks[sig.x][sig.y]);
 }
 
+// Thread-safe: all state is on the stack; ciudad->grid is read-only here
 static int calcular_ruta(Ciudad *ciudad, Auto *automovil) {
     int dist[FILAS][COLUMNAS];
     int vis[FILAS][COLUMNAS];
@@ -91,7 +108,6 @@ static int calcular_ruta(Ciudad *ciudad, Auto *automovil) {
 
         if (u.x == -1)
             break;
-
         if (u.x == automovil->destino.x && u.y == automovil->destino.y)
             break;
 

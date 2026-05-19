@@ -1,12 +1,15 @@
+// src/main.c
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 
-#include "auto.h"
-#include "config.h"
-#include "mapa.h"
-#include "sleep.h"
+#include <omp.h>
+
+#include "../include/auto.h"
+#include "../include/config.h"
+#include "../include/mapa.h"
+#include "../include/sleep.h"
 
 #define MAX_BORDES 20
 
@@ -37,52 +40,65 @@ int main(int argc, char **argv) {
         {11, 11}, {11, 9}, {11, 6}, {11, 3}, {11, 0}, {9, 11}, {6, 11}, {3, 11},
         {0, 11},  {0, 9},  {0, 6},  {0, 3},  {0, 0},  {6, 0},  {9, 0}};
 
+    // Parallel route calculation: each Auto_new call is independent.
+    // calcular_ruta uses only thread-local stack memory and reads immutable
+    // grid fields, so no synchronization is needed for the Dijkstra itself.
+    // The only shared write is ciudad.grid[origen].ocupada, protected below.
+#pragma omp parallel for schedule(dynamic)
     for (size_t i = 0; i < num_autos; i++) {
         Coordenada origen = bordes[i % MAX_BORDES];
-
-        /* Coordenada destino;
-       do {
-           destino = bordes[rand() % MAX_BORDES];
-       } while (destino.x == origen.x && destino.y == origen.y);
-*/
-        Coordenada destino = destinos_fijos[i]; // Destinos fijos
+        Coordenada destino = destinos_fijos[i % MAX_VEHICLES];
         autos[i] = Auto_new(&ciudad, (int)i, origen, destino);
-        ciudad.grid[origen.x][origen.y].ocupada = true;
 
+        // Mark the starting cell as occupied; multiple vehicles may share an
+        // origin (e.g., bordes[0] repeats every 20 cars), so use the lock.
+        omp_set_lock(&ciudad.grid_locks[origen.x][origen.y]);
+        ciudad.grid[origen.x][origen.y].ocupada = true;
+        omp_unset_lock(&ciudad.grid_locks[origen.x][origen.y]);
+
+#pragma omp critical(stdout)
         printf("Auto %zu: (%d,%d) -> (%d,%d)\n", i, origen.x, origen.y,
                destino.x, destino.y);
     }
 
     printf("\n--- SIMULACION ---\n");
 
-    int paso = 0;
+    int paso;
     int todos_llegaron = 0;
 
-    while (!todos_llegaron) {
-        paso++;
+    for (paso = 0; !todos_llegaron; paso++) {
         printf("\n== Paso %d ==\n", paso);
 
+        // Phase 1 — semaphore threads (internally parallel, implicit barrier on
+        // exit)
         Ciudad_actualizar_semaforos(&ciudad);
 
+        // Phase 2 — vehicle threads (destination cell locked inside
+        // Auto_update)
+#pragma omp parallel for schedule(dynamic)
         for (size_t i = 0; i < num_autos; i++)
             Auto_update(&autos[i], &ciudad);
 
-        for (size_t i = 0; i < FILAS; i++) {
-            for (size_t j = 0; j < COLUMNAS; j++)
+        // Phase 3 — reset occupancy (safe: no vehicles running concurrently)
+#pragma omp parallel for collapse(2) schedule(static)
+        for (int i = 0; i < FILAS; i++)
+            for (int j = 0; j < COLUMNAS; j++)
                 ciudad.grid[i][j].ocupada = false;
-        }
 
         sleep_ms(1000);
 
+        // Check termination with a min-reduction (0 = some vehicle still
+        // active)
         todos_llegaron = 1;
+#pragma omp parallel for reduction(min : todos_llegaron)
         for (size_t i = 0; i < num_autos; i++) {
-            if (autos[i].activo) {
+            if (autos[i].activo)
                 todos_llegaron = 0;
-                break;
-            }
         }
     }
 
     printf("\n--- FIN: todos llegaron en %d pasos ---\n", paso);
+
+    Ciudad_destroy(&ciudad);
     return EXIT_SUCCESS;
 }
