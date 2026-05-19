@@ -33,14 +33,36 @@ int main(int argc, char **argv) {
 
     Auto autos[MAX_VEHICLES];
 
+    Coordenada destinos_fijos[MAX_VEHICLES] = {
+    {11,11},
+    {11,9},
+    {11,6},
+    {11,3},
+    {11,0},
+
+    {9,11},
+    {6,11},
+    {3,11},
+    {0,11},
+
+    {0,9},
+    {0,6},
+    {0,3},
+    {0,0},
+
+    {6,0},
+    {9,0}
+    };
+
     for (size_t i = 0; i < num_autos; i++) {
         Coordenada origen = bordes[i % MAX_BORDES];
 
-        Coordenada destino;
+         /* Coordenada destino;
         do {
             destino = bordes[rand() % MAX_BORDES];
         } while (destino.x == origen.x && destino.y == origen.y);
-
+*/ 
+        Coordenada destino = destinos_fijos[i];//Destinos fijos
         autos[i] = Auto_new(&ciudad, (int)i, origen, destino);
         ciudad.grid[origen.x][origen.y].ocupada = true;
 
