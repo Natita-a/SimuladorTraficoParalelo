@@ -16,6 +16,7 @@ typedef struct {
     int tam_ruta;
     int idx;
     bool activo;
+    int tiempo_total;
 } Auto;
 
 Auto Auto_new(Ciudad *ciudad, int id, Coordenada origen, Coordenada destino);
