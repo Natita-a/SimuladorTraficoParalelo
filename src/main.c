@@ -57,12 +57,14 @@ int main(int argc, char **argv) {
     for (size_t i = 0; i < num_autos; i++) {
         Coordenada origen = bordes[i % MAX_BORDES];
 
-         /* Coordenada destino;
+       /* Coordenada destino;
         do {
             destino = bordes[rand() % MAX_BORDES];
         } while (destino.x == origen.x && destino.y == origen.y);
-*/ 
-        Coordenada destino = destinos_fijos[i];//Destinos fijos
+*/   
+
+       Coordenada destino = destinos_fijos[i];
+
         autos[i] = Auto_new(&ciudad, (int)i, origen, destino);
         ciudad.grid[origen.x][origen.y].ocupada = true;
 
@@ -74,6 +76,8 @@ int main(int argc, char **argv) {
 
     int paso = 0;
     int todos_llegaron = 0;
+    //Calcular congestion
+    int congestion[FILAS][COLUMNAS] = {0};
 
     while (!todos_llegaron) {
         paso++;
@@ -81,8 +85,25 @@ int main(int argc, char **argv) {
 
         Ciudad_actualizar_semaforos(&ciudad);
 
-        for (size_t i = 0; i < num_autos; i++)
-            Auto_update(&autos[i], &ciudad);
+       /* for (size_t i = 0; i < num_autos; i++)
+            Auto_update(&autos[i], &ciudad);*/
+
+            //Congestion
+        for (size_t i = 0; i < num_autos; i++) {
+
+          int idx_antes = autos[i].idx;
+
+          Coordenada actual =
+          (autos[i].idx > 0)
+          ? autos[i].ruta[autos[i].idx - 1]
+         : autos[i].origen;
+
+         Auto_update(&autos[i], &ciudad);
+
+        if (autos[i].activo && autos[i].idx == idx_antes) {
+        congestion[actual.x][actual.y]++;
+         }
+        }
 
         for (size_t i = 0; i < FILAS; i++) {
             for (size_t j = 0; j < COLUMNAS; j++)
@@ -99,7 +120,19 @@ int main(int argc, char **argv) {
             }
         }
     }
+    
+    printf("\n=== CONGESTION POR INTERSECCION ===\n");
 
+    for (int i = 0; i < FILAS; i++) {
+       for (int j = 0; j < COLUMNAS; j++) {
+
+        if (congestion[i][j] > 0) {
+
+            printf("Interseccion (%d,%d): %d vehiculos en espera\n",
+                   i, j, congestion[i][j]);
+        }
+      }
+   }
     printf("\n--- FIN: todos llegaron en %d pasos ---\n", paso);
     return EXIT_SUCCESS;
 }
